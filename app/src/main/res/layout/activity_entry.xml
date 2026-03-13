@@ -7,30 +7,57 @@
     android:background="@color/background"
     android:fitsSystemWindows="true">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/entryToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingEnd="16dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/infoButton"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    app:icon="@android:drawable/ic_menu_info_details"
+                    app:iconSize="24dp"
+                    android:contentDescription="About App" />
+            </RelativeLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:padding="24dp">
+        android:padding="24dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/logoText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/logoImage"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="48dp"
-                android:layout_marginBottom="48dp"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.1"
-                android:text="WayIsPer"
-                android:textColor="@color/primary"
-                android:textSize="42sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="24dp"
+                android:contentDescription="WayIsPer Logo"
+                android:src="@drawable/banner" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/usernameInputLayout"
@@ -47,16 +74,42 @@
                     android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/hapticSwitch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="12dp"
-                android:fontFamily="sans-serif-medium"
-                android:text="Nearby Chatrooms"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="16dp"
+                android:text="Haptic Feedback"
+                android:checked="true"
+                app:thumbIcon="@android:drawable/ic_lock_silent_mode_off" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Nearby Chatrooms"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/refreshButton"
+                    style="@style/Widget.Material3.Button.IconButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    app:icon="@android:drawable/stat_notify_sync"
+                    app:iconSize="20dp"
+                    android:contentDescription="Refresh Search" />
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/roomsRecyclerView"

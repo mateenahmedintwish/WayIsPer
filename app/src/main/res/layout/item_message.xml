@@ -7,59 +7,82 @@
     android:paddingHorizontal="16dp"
     android:paddingVertical="4dp">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/messageCard"
+    <!-- System Message View -->
+    <TextView
+        android:id="@+id/systemMessageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        app:cardCornerRadius="18dp"
-        app:cardElevation="0dp"
-        app:cardBackgroundColor="@color/surface_variant"
-        app:strokeWidth="0dp">
+        android:layout_gravity="center"
+        android:layout_marginVertical="8dp"
+        android:background="@drawable/system_message_bg"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        android:textColor="@color/on_surface_variant"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:gravity="center" />
 
-        <LinearLayout
+    <!-- User Message View -->
+    <LinearLayout
+        android:id="@+id/userMessageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/messageCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="10dp">
+            android:layout_gravity="start"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/surface_variant"
+            app:strokeWidth="0dp">
 
-            <TextView
-                android:id="@+id/senderTextView"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:textColor="@color/primary"
-                android:textSize="12sp" />
+                android:orientation="vertical"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="10dp">
 
-            <TextView
-                android:id="@+id/messageTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/senderTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/primary"
+                    android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/timestampTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="2dp"
-                android:alpha="0.6"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="10sp" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+                <TextView
+                    android:id="@+id/messageTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="15sp" />
 
-    <TextView
-        android:id="@+id/heardByTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginHorizontal="8dp"
-        android:textColor="@color/outline"
-        android:textSize="11sp"
-        android:visibility="gone" />
+                <TextView
+                    android:id="@+id/timestampTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="2dp"
+                    android:alpha="0.6"
+                    android:textColor="@color/on_surface_variant"
+                    android:textSize="10sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/heardByTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginHorizontal="8dp"
+            android:textColor="@color/outline"
+            android:textSize="11sp"
+            android:visibility="gone" />
+    </LinearLayout>
 
 </LinearLayout>

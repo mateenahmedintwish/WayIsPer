@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.*
+import com.google.android.material.materialswitch.MaterialSwitch
 
 class EntryActivity : AppCompatActivity() {
 
@@ -41,6 +42,16 @@ class EntryActivity : AppCompatActivity() {
 
         val usernameEditText = findViewById<EditText>(R.id.usernameEditText)
         val createRoomButton = findViewById<Button>(R.id.createRoomButton)
+        val refreshButton = findViewById<View>(R.id.refreshButton)
+        val hapticSwitch = findViewById<MaterialSwitch>(R.id.hapticSwitch)
+        val infoButton = findViewById<View>(R.id.infoButton)
+
+        val sharedPref = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        hapticSwitch.isChecked = sharedPref.getBoolean("haptic_enabled", true)
+
+        hapticSwitch.setOnCheckedChangeListener { _, isChecked ->
+            sharedPref.edit().putBoolean("haptic_enabled", isChecked).apply()
+        }
 
         roomsRecyclerView = findViewById(R.id.roomsRecyclerView)
         roomsRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -57,7 +68,23 @@ class EntryActivity : AppCompatActivity() {
             showCreateRoomDialog(username)
         }
 
+        refreshButton.setOnClickListener {
+            refreshDiscovery()
+        }
+
+        infoButton.setOnClickListener {
+            startActivity(Intent(this, InfoActivity::class.java))
+        }
+
         checkPermissionsAndStartDiscovery()
+    }
+
+    private fun refreshDiscovery() {
+        Nearby.getConnectionsClient(this).stopDiscovery()
+        availableRooms.clear()
+        roomAdapter.notifyDataSetChanged()
+        startDiscovery()
+        Toast.makeText(this, "Refreshing chatrooms...", Toast.LENGTH_SHORT).show()
     }
 
     private fun showCreateRoomDialog(username: String) {
@@ -148,8 +175,10 @@ class EntryActivity : AppCompatActivity() {
                     if (nameParts.size >= 2) {
                         val roomName = nameParts[0]
                         val hasPassword = nameParts[1] == "true"
-                        availableRooms.add(RoomInfo(endpointId, roomName, hasPassword))
-                        roomAdapter.notifyDataSetChanged()
+                        if (availableRooms.none { it.endpointId == endpointId }) {
+                            availableRooms.add(RoomInfo(endpointId, roomName, hasPassword))
+                            roomAdapter.notifyDataSetChanged()
+                        }
                     }
                 }
 

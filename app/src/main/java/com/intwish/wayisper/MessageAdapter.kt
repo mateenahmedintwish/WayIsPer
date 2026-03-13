@@ -11,18 +11,24 @@ import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MessageAdapter(private val messages: List<Message>, private val currentUsername: String) :
+class MessageAdapter(private var messages: List<Message>, private val currentUsername: String) :
     RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
 
     private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     class MessageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val rootLayout: LinearLayout = view as LinearLayout
+        val systemMessageTextView: TextView = view.findViewById(R.id.systemMessageTextView)
+        val userMessageLayout: LinearLayout = view.findViewById(R.id.userMessageLayout)
         val cardView: MaterialCardView = view.findViewById(R.id.messageCard)
         val senderTextView: TextView = view.findViewById(R.id.senderTextView)
         val messageTextView: TextView = view.findViewById(R.id.messageTextView)
         val heardByTextView: TextView = view.findViewById(R.id.heardByTextView)
         val timestampTextView: TextView = view.findViewById(R.id.timestampTextView)
+    }
+
+    fun setMessages(newMessages: List<Message>) {
+        this.messages = newMessages
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
@@ -33,35 +39,45 @@ class MessageAdapter(private val messages: List<Message>, private val currentUse
 
     override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         val message = messages[position]
-        holder.senderTextView.text = message.sender
-        holder.messageTextView.text = message.text
-        holder.timestampTextView.text = timeFormat.format(Date(message.timestamp))
 
-        val isMe = message.sender == currentUsername
-        
-        // Alignment
-        val params = holder.cardView.layoutParams as LinearLayout.LayoutParams
-        params.gravity = if (isMe) Gravity.END else Gravity.START
-        holder.cardView.layoutParams = params
-        
-        val textParams = holder.heardByTextView.layoutParams as LinearLayout.LayoutParams
-        textParams.gravity = if (isMe) Gravity.END else Gravity.START
-        holder.heardByTextView.layoutParams = textParams
-
-        // Seen by / Heard by logic
-        if (message.heardBy.isNotEmpty()) {
-            holder.heardByTextView.visibility = View.VISIBLE
-            holder.heardByTextView.text = "Seen by: ${message.heardBy.joinToString(", ")}"
+        if (message.type == MessageType.SYSTEM) {
+            holder.systemMessageTextView.visibility = View.VISIBLE
+            holder.userMessageLayout.visibility = View.GONE
+            holder.systemMessageTextView.text = "${message.text} • ${timeFormat.format(Date(message.timestamp))}"
         } else {
-            holder.heardByTextView.visibility = View.GONE
+            holder.systemMessageTextView.visibility = View.GONE
+            holder.userMessageLayout.visibility = View.VISIBLE
+
+            holder.senderTextView.text = message.sender
+            holder.messageTextView.text = message.text
+            holder.timestampTextView.text = timeFormat.format(Date(message.timestamp))
+
+            val isMe = message.sender == currentUsername
+            
+            // Alignment
+            val params = holder.cardView.layoutParams as LinearLayout.LayoutParams
+            params.gravity = if (isMe) Gravity.END else Gravity.START
+            holder.cardView.layoutParams = params
+            
+            val textParams = holder.heardByTextView.layoutParams as LinearLayout.LayoutParams
+            textParams.gravity = if (isMe) Gravity.END else Gravity.START
+            holder.heardByTextView.layoutParams = textParams
+
+            // Seen by / Heard by logic
+            if (message.heardBy.isNotEmpty()) {
+                holder.heardByTextView.visibility = View.VISIBLE
+                holder.heardByTextView.text = "Seen by: ${message.heardBy.joinToString(", ")}"
+            } else {
+                holder.heardByTextView.visibility = View.GONE
+            }
+            
+            holder.cardView.setCardBackgroundColor(
+                holder.itemView.context.getColor(if (isMe) R.color.primary_container else R.color.surface_variant)
+            )
+            holder.messageTextView.setTextColor(
+                holder.itemView.context.getColor(if (isMe) R.color.on_primary_container else R.color.on_surface_variant)
+            )
         }
-        
-        holder.cardView.setCardBackgroundColor(
-            holder.itemView.context.getColor(if (isMe) R.color.primary_container else R.color.surface_variant)
-        )
-        holder.messageTextView.setTextColor(
-            holder.itemView.context.getColor(if (isMe) R.color.on_primary_container else R.color.on_surface_variant)
-        )
     }
 
     override fun getItemCount() = messages.size
